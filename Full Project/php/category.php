@@ -1,24 +1,28 @@
-<!-- Showing user's profile -->
+<!-- User's chosen category page -->
 <?php
 include "db.php";
 if (isset($_SESSION['session']) === false) {
     session_unset();
     session_destroy();
     header('location: signin.php');
-} elseif ($_GET['userid'] != $_SESSION['id']) {
-    header("location: main.php");
 }
-?>
+$categoryid = $_GET['bid'];
 
+$categorydata = "SELECT * FROM `categories` WHERE category_id = $categoryid";
+$result = $con->query($categorydata);
+$row = $result->fetch_assoc();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title><?php echo $row['book_category'] . ' Category'; ?></title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/all.min.css">
+    <link rel="stylesheet" href="../css/mymain.css">
     <link rel="stylesheet" href="../css/myfonts.css">
     <link rel="stylesheet" href="../css/colors.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,6 +34,18 @@ if (isset($_SESSION['session']) === false) {
 </head>
 
 <body>
+    <div id="startpage1"></div>
+    <div id="contextMenu" class="context-menu" style="display:none">
+        <ul>
+            <li><a href="#">Element-1</a></li>
+            <li><a href="#">Element-2</a></li>
+            <li><a href="#">Element-3</a></li>
+            <li><a href="#">Element-4</a></li>
+            <li><a href="#">Element-5</a></li>
+            <li><a href="#">Element-6</a></li>
+            <li><a href="#">Element-7</a></li>
+        </ul>
+    </div>
     <nav class="navbar navbar-expand-lg sticky-top" id="nav1">
         <div class="container">
             <a class="navbar-brand" href="main.php">
@@ -47,9 +63,6 @@ if (isset($_SESSION['session']) === false) {
                         <button class="nav-link" id="home"><a class="links2" href="main.php">Home</a></button>
                     </li>
                     <li class="nav-item p-lg-3">
-                        <a class="nav-link" href="categories.php">Categories</a>
-                    </li>
-                    <li class="nav-item p-lg-3">
                         <a class="nav-link" href="contact.php">Contact</a>
                     </li>
                     <li class="nav-item p-lg-3">
@@ -64,7 +77,7 @@ if (isset($_SESSION['session']) === false) {
                             </svg>
                         </a>
                     </li>
-                    <!-- <li class="nav-item p-lg-3">
+                    <li class="nav-item p-lg-3">
                         <a href="profile.php?userid=<?php echo $_SESSION['id']; ?>" id="profile">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                                 fill="#e8eaed">
@@ -72,7 +85,7 @@ if (isset($_SESSION['session']) === false) {
                                     d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm246-164q-59 0-99.5-40.5T340-580q0-59 40.5-99.5T480-720q59 0 99.5 40.5T620-580q0 59-40.5 99.5T480-440Zm0 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z" />
                             </svg>
                         </a>
-                    </li> -->
+                    </li>
                     <li class="nav-item p-lg-4">
                         <button id="theme-switch">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
@@ -91,25 +104,50 @@ if (isset($_SESSION['session']) === false) {
             </div>
         </div>
     </nav>
-    <div class="container my-3">
-        <div class="container">
-            <h1 class="dm-serif-text-regular-italic desc" style=""><br>Your Profile Page</h1>
-            <br><br>
-            <div class="list-group list-group-flush">
-                <a href="" class="list-group-item list-group-item-action disabled">Name:
-                    <?php echo $_SESSION['username']; ?></a>
-                <a href="" class="list-group-item list-group-item-action disabled">Email:
-                    <?php echo $_SESSION['email']; ?></a>
-                <a href="" class="list-group-item list-group-item-action disabled">Type: User</a>
-                <a href="user_cart.php?userid=<?php echo $_SESSION['id']; ?>"
-                    class="list-group-item list-group-item-action list-group-item-success">Shopping Cart 🛒</a>
-                <a href="confirm.php?userid=<?php echo $_SESSION['id']; ?>"
-                    class="list-group-item list-group-item-action list-group-item-info">Edit your information</a>
-                <a href="disconnect.php" class="list-group-item list-group-item-action list-group-item-danger">Sign
-                    Out</a>
-            </div>
-        </div>
-    </div>
+
+    <?php
+    include("../../My include PHP/html.php");
+    include("../../My include PHP/css.php");
+    include("../../My include PHP/js.php");
+    $categoryname = $row['book_category'];
+    $sql = "SELECT * FROM `books` WHERE book_category = '$categoryname'";
+    $result = $con->query($sql);
+    div("container my-3 page1", "");
+    div("container", "");
+    h1("dm-serif-text-regular-italic desc", "");
+    br(1);
+    echo $row['book_category'] . ' Category';
+    _h1();
+    br(2);
+    div("row row-cols-1 row-cols-md-3 g-4", "");
+    while ($row = $result->fetch_assoc()) {
+        echo "<div class='col' id='point" . $row['book_id'] . "'>
+                <div class='card h-100'>
+                    <a class='links2 details' href='details.php?bid=" . $row['book_id'] . "'>
+                        <img src='../book_images/" . $row["book_image"] . "' class='card-img-top' alt='...'>
+                        <div class='card-body'>
+                            <h5 class='card-title'>" . $row["book_name"] . "</h5>
+                            <p class='card-text'>" . $row["book_desc"] . "</p>
+                        </div>
+                        <div class='card-footer'>
+                            <small class='text-body-secondary'>Category: " . $row["book_category"] . ", " . $row["book_price"] . ' $' . "</small>
+                        </div>
+                    </a>    
+                </div>
+            </div>";
+    }
+    style();
+    selector("h1", [tac]);
+    selector(".card", [jcc, aic]);
+    _style();
+
+    _div();
+    _div();
+    _div();
+    ?>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/all.min.js"></script>
+    <script src="../js/rightclick.js"></script>
 </body>
 
 </html>

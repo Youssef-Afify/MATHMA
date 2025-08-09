@@ -104,6 +104,9 @@ $row = $result->fetch_assoc();
                     </h4>
                     <br>
                     <h4 class="dm-serif-text-regular-italic desc" style="text-align: center;">
+                        <?php echo "Category: " . $row['book_category']; ?>
+                    </h4>
+                    <h4 class="dm-serif-text-regular-italic desc" style="text-align: center;">
                         <?php echo "Price: " . $row['book_price'] . '$'; ?>
                     </h4>
                     <div class="" style="display: block;" id="details_menu_1">
