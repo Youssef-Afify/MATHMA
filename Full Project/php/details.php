@@ -112,6 +112,12 @@ $cartrow = $cartresult->fetch_assoc();
                         <?php echo $row['book_desc']; ?>
                     </h4>
                     <br>
+                    <h4 class="dm-serif-text-regular-italic desc" style="text-align: center;">
+                        <?php echo "Category: " . $row['book_category']; ?>
+                    </h4>
+                    <h4 class="dm-serif-text-regular-italic desc" style="text-align: center;">
+                        <?php echo "Price: " . $row['book_price'] . '$'; ?>
+                    </h4>
                     <a class="btn btn-success my-3 mx-5 button1 links1" id="addtocart"
                         href="cart.php?bid=<?php echo $row['book_id']; ?>" role="button"><?php if (isset($cartrow['command'])) {
                                echo $cartrow['command'];
@@ -132,8 +138,8 @@ $cartrow = $cartresult->fetch_assoc();
     <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/all.min.js"></script>
     <script>
-        if(document.getElementById("addtocart").innerHTML=="Remove from cart 🛒") {
-            document.getElementById("addtocart").style.backgroundColor="red";
+        if (document.getElementById("addtocart").innerHTML == "Remove from cart 🛒") {
+            document.getElementById("addtocart").style.backgroundColor = "red";
         }
     </script>
 </body>

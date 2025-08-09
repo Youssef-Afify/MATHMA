@@ -1,24 +1,22 @@
-<!-- Showing user's profile -->
+<!-- Admin's categories page -->
 <?php
 include "db.php";
-if (isset($_SESSION['session']) === false) {
+if (isset($_SESSION['admin_session']) === false) {
     session_unset();
     session_destroy();
     header('location: signin.php');
-} elseif ($_GET['userid'] != $_SESSION['id']) {
-    header("location: main.php");
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>All Categories</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/all.min.css">
+    <link rel="stylesheet" href="../css/mymain.css">
     <link rel="stylesheet" href="../css/myfonts.css">
     <link rel="stylesheet" href="../css/colors.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,9 +28,21 @@ if (isset($_SESSION['session']) === false) {
 </head>
 
 <body>
+    <div id="startpage1"></div>
+    <div id="contextMenu" class="context-menu" style="display:none">
+        <ul>
+            <li><a href="#">Element-1</a></li>
+            <li><a href="#">Element-2</a></li>
+            <li><a href="#">Element-3</a></li>
+            <li><a href="#">Element-4</a></li>
+            <li><a href="#">Element-5</a></li>
+            <li><a href="#">Element-6</a></li>
+            <li><a href="#">Element-7</a></li>
+        </ul>
+    </div>
     <nav class="navbar navbar-expand-lg sticky-top" id="nav1">
         <div class="container">
-            <a class="navbar-brand" href="main.php">
+            <a class="navbar-brand" href="#startpage">
                 <img src="../icons/reshot-icon-open-book-LFUDNZRY6S.svg" alt="" id="brand-icon">
                 <i class="dm-serif-text-regular-italic desc">MATHMA</i>
             </a>
@@ -44,10 +54,7 @@ if (isset($_SESSION['session']) === false) {
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item p-lg-3">
-                        <button class="nav-link" id="home"><a class="links2" href="main.php">Home</a></button>
-                    </li>
-                    <li class="nav-item p-lg-3">
-                        <a class="nav-link" href="categories.php">Categories</a>
+                        <button class="nav-link" id="home"><a class="links2" href="#startpage">Home</a></button>
                     </li>
                     <li class="nav-item p-lg-3">
                         <a class="nav-link" href="contact.php">Contact</a>
@@ -56,23 +63,14 @@ if (isset($_SESSION['session']) === false) {
                         <a class="nav-link" aria-current="page" href="about.php">About</a>
                     </li>
                     <li class="nav-item p-lg-3">
-                        <a href="user_cart.php?userid=<?php echo $_SESSION['id']; ?>" id="carticon">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                                fill="#e8eaed">
-                                <path
-                                    d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM208-800h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Z" />
-                            </svg>
-                        </a>
-                    </li>
-                    <!-- <li class="nav-item p-lg-3">
-                        <a href="profile.php?userid=<?php echo $_SESSION['id']; ?>" id="profile">
+                        <a href="admin_profile.php?adminid=<?php echo $_SESSION['admin_id']; ?>" id="profile">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                                 fill="#e8eaed">
                                 <path
                                     d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm246-164q-59 0-99.5-40.5T340-580q0-59 40.5-99.5T480-720q59 0 99.5 40.5T620-580q0 59-40.5 99.5T480-440Zm0 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z" />
                             </svg>
                         </a>
-                    </li> -->
+                    </li>
                     <li class="nav-item p-lg-4">
                         <button id="theme-switch">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
@@ -93,23 +91,49 @@ if (isset($_SESSION['session']) === false) {
     </nav>
     <div class="container my-3">
         <div class="container">
-            <h1 class="dm-serif-text-regular-italic desc" style=""><br>Your Profile Page</h1>
+            <h1 class="dm-serif-text-regular-italic desc" style="text-align: center;"><br>All Categories</h1>
             <br><br>
-            <div class="list-group list-group-flush">
-                <a href="" class="list-group-item list-group-item-action disabled">Name:
-                    <?php echo $_SESSION['username']; ?></a>
-                <a href="" class="list-group-item list-group-item-action disabled">Email:
-                    <?php echo $_SESSION['email']; ?></a>
-                <a href="" class="list-group-item list-group-item-action disabled">Type: User</a>
-                <a href="user_cart.php?userid=<?php echo $_SESSION['id']; ?>"
-                    class="list-group-item list-group-item-action list-group-item-success">Shopping Cart 🛒</a>
-                <a href="confirm.php?userid=<?php echo $_SESSION['id']; ?>"
-                    class="list-group-item list-group-item-action list-group-item-info">Edit your information</a>
-                <a href="disconnect.php" class="list-group-item list-group-item-action list-group-item-danger">Sign
-                    Out</a>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col">
+                    <div class="card text-center h-100">
+                        <a class="links2" href="create_category.php">
+                            <div class="card-footer">
+                                <small class="text-body">+ Create a new category</small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <?php
+                include("../../My include PHP/html.php");
+                include("../../My include PHP/css.php");
+                include("../../My include PHP/js.php");
+
+                $sql = "SELECT * FROM `categories`";
+                $result = $con->query($sql);
+                while ($row = $result->fetch_assoc()) {
+                    echo "<div class='col' id='point" . $row['category_id'] . "'>
+                <div class='card h-100'>
+                    <a class='links2 details' href='admin_category.php?bid=" . $row['category_id'] . "'>
+                        <div class='card-footer'>
+                            <small class='text-body'>" . $row['book_category'] . "</small>
+                        </div>
+                    </a>    
+                </div>
+            </div>";
+                }
+                style();
+                selector("h1", [tac]);
+                selector(".card", [jcc, aic]);
+                _style();
+
+
+                ?>
             </div>
         </div>
     </div>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/all.min.js"></script>
+    <script src="../js/rightclick.js"></script>
 </body>
 
 </html>

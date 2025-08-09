@@ -1,24 +1,24 @@
-<!-- Showing user's profile -->
+<!-- create a new category -->
 <?php
+
 include "db.php";
-if (isset($_SESSION['session']) === false) {
+if (isset($_SESSION['admin_session']) == false) {
     session_unset();
     session_destroy();
     header('location: signin.php');
-} elseif ($_GET['userid'] != $_SESSION['id']) {
-    header("location: main.php");
 }
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>Create Category</title>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/all.min.css">
+    <link rel="stylesheet" href="../css/mymain.css">
     <link rel="stylesheet" href="../css/myfonts.css">
     <link rel="stylesheet" href="../css/colors.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,9 +30,10 @@ if (isset($_SESSION['session']) === false) {
 </head>
 
 <body>
+    <div id="startpage1"></div>
     <nav class="navbar navbar-expand-lg sticky-top" id="nav1">
         <div class="container">
-            <a class="navbar-brand" href="main.php">
+            <a class="navbar-brand" href="admin.php">
                 <img src="../icons/reshot-icon-open-book-LFUDNZRY6S.svg" alt="" id="brand-icon">
                 <i class="dm-serif-text-regular-italic desc">MATHMA</i>
             </a>
@@ -44,10 +45,7 @@ if (isset($_SESSION['session']) === false) {
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item p-lg-3">
-                        <button class="nav-link" id="home"><a class="links2" href="main.php">Home</a></button>
-                    </li>
-                    <li class="nav-item p-lg-3">
-                        <a class="nav-link" href="categories.php">Categories</a>
+                        <button class="nav-link" id="home"><a class="links2" href="admin.php">Home</a></button>
                     </li>
                     <li class="nav-item p-lg-3">
                         <a class="nav-link" href="contact.php">Contact</a>
@@ -56,23 +54,14 @@ if (isset($_SESSION['session']) === false) {
                         <a class="nav-link" aria-current="page" href="about.php">About</a>
                     </li>
                     <li class="nav-item p-lg-3">
-                        <a href="user_cart.php?userid=<?php echo $_SESSION['id']; ?>" id="carticon">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                                fill="#e8eaed">
-                                <path
-                                    d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM208-800h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Z" />
-                            </svg>
-                        </a>
-                    </li>
-                    <!-- <li class="nav-item p-lg-3">
-                        <a href="profile.php?userid=<?php echo $_SESSION['id']; ?>" id="profile">
+                        <a href="profile.php" id="profile">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                                 fill="#e8eaed">
                                 <path
                                     d="M234-276q51-39 114-61.5T480-360q69 0 132 22.5T726-276q35-41 54.5-93T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 59 19.5 111t54.5 93Zm246-164q-59 0-99.5-40.5T340-580q0-59 40.5-99.5T480-720q59 0 99.5 40.5T620-580q0 59-40.5 99.5T480-440Zm0 360q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z" />
                             </svg>
                         </a>
-                    </li> -->
+                    </li>
                     <li class="nav-item p-lg-4">
                         <button id="theme-switch">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
@@ -91,25 +80,40 @@ if (isset($_SESSION['session']) === false) {
             </div>
         </div>
     </nav>
+
+    <?php
+    include "../../My include PHP/html.php";
+    include "../../My include PHP/css.php";
+    include "../../My include PHP/js.php";
+
+    if (isset($_POST['added'])) {
+        $bookcategory = $_POST['bookcategory'];
+        $insertquery = "INSERT INTO `categories` (book_category) VALUES('$bookcategory')";
+        $iquery = mysqli_query($con, $insertquery);
+        echo "<div class='mx-auto w-50 alert alert-success alert1 dm-serif-text-regular-italic my-4' role='alert'>" . "Created Successfully!" . "</div>";
+        style();
+        selector(".alert1", [bgcolorhex("008642"), tac, "font-size: x-large;"]);
+        _style();
+    }
+    ?>
+
     <div class="container my-3">
-        <div class="container">
-            <h1 class="dm-serif-text-regular-italic desc" style=""><br>Your Profile Page</h1>
-            <br><br>
-            <div class="list-group list-group-flush">
-                <a href="" class="list-group-item list-group-item-action disabled">Name:
-                    <?php echo $_SESSION['username']; ?></a>
-                <a href="" class="list-group-item list-group-item-action disabled">Email:
-                    <?php echo $_SESSION['email']; ?></a>
-                <a href="" class="list-group-item list-group-item-action disabled">Type: User</a>
-                <a href="user_cart.php?userid=<?php echo $_SESSION['id']; ?>"
-                    class="list-group-item list-group-item-action list-group-item-success">Shopping Cart 🛒</a>
-                <a href="confirm.php?userid=<?php echo $_SESSION['id']; ?>"
-                    class="list-group-item list-group-item-action list-group-item-info">Edit your information</a>
-                <a href="disconnect.php" class="list-group-item list-group-item-action list-group-item-danger">Sign
-                    Out</a>
+
+        <h1 class="dm-serif-text-regular-italic desc"><br>Create a new category</h1>
+        <br><br>
+        <form action="" method="post" enctype="multipart/form-data">
+            <div class="form-floating mb-4">
+                <input type="text" class="form-control" id="floatingName" name="bookcategory" required placeholder="">
+                <label for="floatingName">Category Name</label>
             </div>
-        </div>
+            <div>
+                <input class="my-4 w-100 dm-serif-text-regular-italic" id="added" type="submit" name="added"
+                    value="Create">
+            </div>
+        </form>
     </div>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/all.min.js"></script>
 </body>
 
 </html>
