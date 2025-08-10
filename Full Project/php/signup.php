@@ -138,8 +138,7 @@
             if ($password === $password2) {
                 $hashedpass = password_hash($password, PASSWORD_DEFAULT);
 
-                // Edit the next line to sign up as a user or as an admin
-                $query = "INSERT INTO users (username, email, password, phonenumber) VALUES ('$username', '$email', '$hashedpass', '$phonenumber')";
+                $query = "INSERT INTO users (username, email, password, phonenumber) VALUES ('$username', '$email', '$hashedpass', '$phonenumber')"; //user
 
                 $conn = new mysqli('localhost', 'root', '', 'finalproject');
                 $conn->query($query);
